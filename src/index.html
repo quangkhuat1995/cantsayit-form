@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cant say it</title>
+    <meta name="description" content="Cant say it" />
+    <meta name="author" content="Quang Khuat" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="custom.css" />
+  </head>
+  <body class="bg-light">
+		<div id="root" class="h-screen">
+			<div class="h-full bg-light">
+				<div id="container" class="md:container md:mx-auto flex flex-col items-center h-full justify-center">
+					<!-- ** SCREEN 1 ** -->
+					<section class="hide">
+						<button
+							class="flex justify-center items-center text-xl text-white bg-secondary px-10 py-4">
+							New deck
+						</button>
+					</section>
+
+					<!-- ** SCREEN 2 ** -->
+					<section class="hide">
+						<input type="text"
+							name="title" id="title" placeholder="Title of the deck"
+							class="bg-white font-bold text-xl border-2 border-transparent shadow-md rounded-3xl
+							focus:outline-none focus:border-primary transition px-4 py-2"
+						>
+					</section>
+
+					<!-- ** SCREEN 3 ** -->
+					<section class="flex flex-col h-full w-full mt-3.5 items-center justify-between hide">
+						<form id="search" class="flex justify-between items-center space-x-4">
+							<input type="text"
+								name="searchWord" id="searchWord" placeholder="Type the word here..."
+								class="bg-white font-bold text-xl border-2 border-transparent shadow-md rounded-3xl
+								focus:outline-none focus:border-primary transition px-4 py-2 "
+							>
+							<button class="flex justify-center items-center text-xl text-white px-4 py-2 rounded-3xl font-semibold focus:outline-none transition bg-secondary w-full">Search</button>
+						</form>
+						<div id="suggestions" class="flex flex-wrap gap-5 text-white p-3">
+							<div id="suggestWord_1" class="bg-word text-gray-600 leading-7 h-7 w-max px-2 relative">
+								<span>hi</span>
+								<span class="absolute top-0 right-0 border-black border rounded-full w-4 h-4 bg-word flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 text-center">+</span>
+							</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hello</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">word</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">kitty</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">here</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">yes</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">Vietnam</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">run</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hit</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hit</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">jump</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hi</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hello</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">word</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">kitty</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">here</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">yes</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">Vietnam</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">run</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hit</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hit</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">jump</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hi</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hello</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">word</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">kitty</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">here</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">yes</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">Vietnam</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">run</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hit</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hit</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">jump</div>
+						</div>
+						<div id="main" class="p-4 bg-secondary rounded-3xl">
+							<div class="bg-transparent flex flex-col justify-between h-96">
+								<div class="h-44 w-60 bg-light relative ">
+									<img id="mainImage" src="./assets/dict.jpg" alt="" class="object-cover h-full w-full">
+									<button id="btn_upload" class="absolute bottom-0 right-0 w-10 h-10 rounded-full focus:outline-none" title="Upload your photo">
+										<img src="./assets/download_btn.svg" alt="download" class="">
+									</button>
+								</div>
+								<div class="bg-light h-44 flex">
+									<ul class="flex flex-col items-center justify-center flex-1 space-y-1">
+										<li><input type="text" name="word-1" id="word-1" placeholder="final words" class="bg-word rounded-lg px-4 py-1 h-7 w-48 placeholder-gray-400::placeholder"></li>
+										<li><input type="text" name="word-2" id="word-2" placeholder="final words" class="bg-word rounded-lg px-4 py-1 h-7 w-48 placeholder-gray-400::placeholder"></li>
+										<li><input type="text" name="word-3" id="word-3" placeholder="final words" class="bg-word rounded-lg px-4 py-1 h-7 w-48 placeholder-gray-400::placeholder"></li>
+										<li><input type="text" name="word-4" id="word-4" placeholder="final words" class="bg-word rounded-lg px-4 py-1 h-7 w-48 placeholder-gray-400::placeholder"></li>
+										<li><input type="text" name="word-5" id="word-5" placeholder="final words" class="bg-error rounded-lg px-4 py-1 h-7 w-48 placeholder-gray-400::placeholder"></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div id="action" class="w-full h-16 flex items-center justify-between px-3 text-white bg-white shadow-top">
+							<button class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">1</button>
+							<button class="w-11 h-8 bg-secondary text-xl shadow-round">End</button>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+		<script type="module" src="./js/index.js"></script>
+  </body>
+</html>
