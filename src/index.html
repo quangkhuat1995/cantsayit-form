@@ -41,7 +41,7 @@
 							<button class="flex justify-center items-center text-xl text-white px-4 py-2 rounded-3xl font-semibold focus:outline-none transition bg-secondary w-full">Search</button>
 						</form>
 						<div id="suggestions" class="flex flex-wrap gap-5 text-white p-3">
-							<div id="suggestWord_1" class="bg-word text-gray-600 leading-7 h-7 w-max px-2 relative">
+							<!-- <div id="suggestWord_1" class="bg-word text-gray-600 leading-7 h-7 w-max px-2 relative">
 								<span>hi</span>
 								<span class="absolute top-0 right-0 border-black border rounded-full w-4 h-4 bg-word flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 text-center">+</span>
 							</div>
@@ -76,12 +76,32 @@
 							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">run</div>
 							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hit</div>
 							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hit</div>
-							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">jump</div>
+							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">jump</div> -->
+							<div class="load-wrapp">
+								<div class="load-5">
+									<div class="ring-2">
+										<div class="ball-holder">
+											<div class="ball"></div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div id="main" class="p-4 bg-secondary rounded-3xl">
 							<div class="bg-transparent flex flex-col justify-between h-96">
 								<div class="h-44 w-60 bg-light relative ">
-									<img id="mainImage" src="./assets/dict.jpg" alt="" class="object-cover h-full w-full">
+									<!-- <div class="h-full w-full flex justify-center items-center">
+										<div class="load-wrapp">
+											<div class="load-5">
+												<div class="ring-2">
+													<div class="ball-holder">
+														<div class="ball"></div>
+													</div>
+												</div>
+											</div>
+										</div> -->
+										<img id="mainImage" src="./assets/dict.jpg" alt="" class="object-cover h-full w-full hide">
+									</div>
 									<button id="btn_upload" class="absolute bottom-0 right-0 w-10 h-10 rounded-full focus:outline-none" title="Upload your photo">
 										<img src="./assets/download_btn.svg" alt="download" class="">
 									</button>
