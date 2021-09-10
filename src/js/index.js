@@ -1,4 +1,5 @@
 import unsplashService from './services/Unsplash.js';
+import dictionaryService from './services/Dictionary.js';
 
 const ENTER_KEY_CODE = 13;
 //each page will be section
@@ -45,26 +46,49 @@ page2.querySelector('input#title').addEventListener('keyup', (e) => {
 	}
 });
 
-const formSearchElement = page3.querySelector('form#search');
-// console.log(formSearchElement);
-// if (searchValue.trim() === '') {
-// 	formSearchElement.querySelector('button').setAttribute('disabled', 'true');
-// } else {
-// 	formSearchElement.querySelector('button').removeAttribute('disabled');
-// }
-console.log('ex');
-page3.querySelector('form#search').addEventListener('submit', (e) => {
+page3.querySelector('form#search').addEventListener('submit', async (e) => {
 	const searchValue = document.getElementById('searchWord').value;
 	console.log(searchValue);
 	e.preventDefault();
-	unsplashService
-		.searchPhotos(searchValue)
-		.then((result) => {
-			// TODO: populate the
-			const mainImageTag = document.getElementById('mainImage');
-			mainImageTag.setAttribute('src', `${result.rawUrl}&w=768&dpr=2`);
-			mainImageTag.setAttribute('alt', result.description);
-		})
-		.catch((error) => console.log(error));
+	const [unsplashResult, dictionaryResult] = await Promise.allSettled([
+		unsplashService.searchPhotos(searchValue),
+		dictionaryService.searchWord(searchValue),
+	]);
+
+	if (unsplashResult.status === 'fulfilled') {
+		const mainImageTag = document.getElementById('mainImage');
+		mainImageTag.setAttribute('src', `${unsplashResult.value.rawUrl}&w=768&dpr=2`);
+		mainImageTag.setAttribute('alt', unsplashResult.value.description);
+	} else {
+		//TODO: handle error not found image
+	}
+
+	if (dictionaryResult.status === 'fulfilled') {
+		const { definition } = dictionaryResult.value;
+		// const mainImageTag = document.getElementById('mainImage');
+		// mainImageTag.setAttribute('src', `${dictionaryResult.value.rawUrl}&w=768&dpr=2`);
+		// mainImageTag.setAttribute('alt', dictionaryResult.value.description);
+	} else {
+		//TODO: handle error not found word
+	}
+
+	console.log('unsplashResult', unsplashResult);
+	console.log('dictionaryResult', dictionaryResult);
+	// unsplashService
+	// 	.searchPhotos(searchValue)
+	// 	.then((result) => {
+	// 		// TODO: populate the
+	// 		const mainImageTag = document.getElementById('mainImage');
+	// 		mainImageTag.setAttribute('src', `${result.rawUrl}&w=768&dpr=2`);
+	// 		mainImageTag.setAttribute('alt', result.description);
+	// 	})
+	// 	.catch((error) => console.log(error));
+
+	// dictionaryService
+	// 	.searchWord(searchValue)
+	// 	.then((result) => {
+	// 		console.log(result);
+	// 	})
+	// 	.catch((error) => console.log(error));
 });
 console.log('exx');
