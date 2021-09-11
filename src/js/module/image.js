@@ -4,6 +4,7 @@ export const clearImage = () => {
 	const mainImage = document.getElementById('mainImage');
 	if (mainImage) {
 		mainImage.setAttribute('src', '');
+		mainImage.setAttribute('alt', '');
 	}
 };
 

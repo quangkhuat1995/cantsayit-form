@@ -1,3 +1,6 @@
+import { clearSuggestionWords } from './suggestions.js';
+import { clearImage } from './image.js';
+
 export const getExcludedWords = () => {
 	return fetch('../../const/excludedWords.txt')
 		.then((response) => response.text())
@@ -16,3 +19,11 @@ export const loadingContent = `
 		</div>
 	</div>
 `;
+
+export const readyForNextCard = () => {
+	document.getElementById('searchWord').value = '';
+	clearSuggestionWords();
+	clearImage();
+	const inputs = document.querySelectorAll('#main input');
+	inputs.forEach((inp) => (inp.value = ''));
+};
