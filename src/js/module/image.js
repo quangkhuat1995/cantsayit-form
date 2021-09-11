@@ -24,6 +24,6 @@ export const showImage = (unsplashResult) => {
 	mainImageTag.setAttribute('src', `${unsplashResult.value.rawUrl}&w=768&dpr=2`);
 	mainImageTag.setAttribute('alt', unsplashResult.value.description);
 	mainImageTag.classList.remove('hide');
-	mainImageTag.parentNode.removeChild(mainImageTag.previousSibling);
-	// TODO: investigate to remove loading screen
+	mainImageTag.previousSibling.remove();
+	// mainImageTag.parentNode.removeChild(mainImageTag.previousSibling);
 };
