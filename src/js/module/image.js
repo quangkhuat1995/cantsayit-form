@@ -22,8 +22,8 @@ export const showLoadingImage = () => {
 
 export const showImage = (unsplashResult) => {
 	const mainImageTag = document.getElementById('mainImage');
-	mainImageTag.setAttribute('src', `${unsplashResult.value.rawUrl}&w=768&dpr=2`);
-	mainImageTag.setAttribute('alt', unsplashResult.value.description);
+	mainImageTag.setAttribute('src', `${unsplashResult.rawUrl}&w=768&dpr=2`);
+	mainImageTag.setAttribute('alt', unsplashResult.description);
 	mainImageTag.classList.remove('hide');
 	mainImageTag.previousSibling.remove();
 	// mainImageTag.parentNode.removeChild(mainImageTag.previousSibling);

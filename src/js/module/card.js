@@ -14,7 +14,7 @@ export const addNewCard = (uuid, num) => {
 	newCard.innerHTML = num;
 
 	previousContainerDiv.append(newCard);
-	// the previous siblings should remove the 'active' class eg: bg-primary
+	// the previous siblings should be removed the 'active' class eg: bg-primary
 	if (num !== 1) {
 		newCard.previousElementSibling.classList.remove('bg-primary');
 		newCard.previousElementSibling.classList.add('bg-secondary');

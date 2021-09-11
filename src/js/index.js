@@ -1,7 +1,7 @@
 import unsplashService from './services/Unsplash.js';
 import dictionaryService from './services/Dictionary.js';
 import validationService from './services/Validation.js';
-import { getExcludedWords, readyForNextCard } from './module/index.js';
+import { getExcludedWords, populateEditData, readyForNextCard } from './module/index.js';
 import { clearSuggestionWords, populateSuggestionWords, showLoadingSuggestions } from './module/suggestions.js';
 import { clearImage, showLoadingImage, showImage } from './module/image.js';
 import { clearCards, addNewCard } from './module/card.js';
@@ -79,10 +79,7 @@ page3.querySelector('form#search').addEventListener('submit', async (e) => {
 	]);
 
 	if (unsplashResult.status === 'fulfilled') {
-		// const mainImageTag = document.getElementById('mainImage');
-		// mainImageTag.setAttribute('src', `${unsplashResult.value.rawUrl}&w=768&dpr=2`);
-		// mainImageTag.setAttribute('alt', unsplashResult.value.description);
-		showImage(unsplashResult);
+		showImage(unsplashResult.value);
 	} else {
 		//TODO: handle error not found image
 	}
@@ -96,31 +93,12 @@ page3.querySelector('form#search').addEventListener('submit', async (e) => {
 		suggestWords = suggestWords.filter((el) => !excludedWords.includes(el));
 		console.log(suggestWords);
 		populateSuggestionWords(suggestWords);
-		// const mainImageTag = document.getElementById('mainImage');
-		// mainImageTag.setAttribute('src', `${dictionaryResult.value.rawUrl}&w=768&dpr=2`);
-		// mainImageTag.setAttribute('alt', dictionaryResult.value.description);
 	} else {
 		//TODO: handle error not found word
 	}
 
 	console.log('unsplashResult', unsplashResult);
 	console.log('dictionaryResult', dictionaryResult);
-	// unsplashService
-	// 	.searchPhotos(searchValue)
-	// 	.then((result) => {
-	// 		// TODO: populate the
-	// 		const mainImageTag = document.getElementById('mainImage');
-	// 		mainImageTag.setAttribute('src', `${result.rawUrl}&w=768&dpr=2`);
-	// 		mainImageTag.setAttribute('alt', result.description);
-	// 	})
-	// 	.catch((error) => console.log(error));
-
-	// dictionaryService
-	// 	.searchWord(searchValue)
-	// 	.then((result) => {
-	// 		console.log(result);
-	// 	})
-	// 	.catch((error) => console.log(error));
 });
 console.log('exx');
 
@@ -174,16 +152,30 @@ btnAdd.addEventListener('click', (e) => {
 		let questions = JSON.parse(localStorage.getItem('question') || '[]') || [];
 
 		const isAdd = !questions.length || questions?.findIndex((ques) => ques.sid === currentSID) === -1;
-		debugger;
 		const word = localStorage.getItem('word') || '';
 		const prohibited_words = Array.from(inputs).reduce(
 			(acc, inp) => (inp.value.trim() ? [...acc, inp.value.trim()] : acc),
 			[]
 		);
 		const imageURL = document.getElementById('mainImage').getAttribute('src');
+		const imageAlt = document.getElementById('mainImage').getAttribute('alt');
+		const remainWordBoxes = document
+			.getElementById('suggestions')
+			.querySelectorAll('div.relative.word-selected[data-show="true"]');
+		let remainWords = [];
+		if (remainWordBoxes) {
+			remainWords = Array.from(remainWordBoxes).map((item) => item.dataset.id.split('-').pop());
+		}
 
 		if (isAdd) {
-			questions.push({ sid: currentSID, type: 'word_explanation', word, prohibited_words, image: imageURL });
+			questions.push({
+				sid: currentSID,
+				type: 'word_explanation',
+				word,
+				prohibited_words,
+				image: { rawUrl: imageURL, description: imageAlt },
+				remainWords,
+			});
 			const newSID = uuidv4();
 			addNewCard(newSID, buttons.length + 1);
 			// reset the form
@@ -191,27 +183,56 @@ btnAdd.addEventListener('click', (e) => {
 		} else {
 			questions = questions.map((item) => {
 				if (item.sid === currentSID) {
-					return { ...item, prohibited_words, imageURL, word };
+					return {
+						...item,
+						word,
+						prohibited_words,
+						image: { rawUrl: imageURL, description: imageAlt },
+						remainWords,
+					};
 				}
 				return item;
 			});
+			// TODO: move to add new one after edit
 		}
 
 		localStorage.setItem('question', JSON.stringify(questions));
+
+		console.log(page3.querySelector('#previous-container').querySelectorAll('button'));
+		// .forEach((btn) => {
+		// 	btn.addEventListener('click', (e) => {
+		// 		console.log('click');
+		// 		// do nothing if click on the same active one
+		// 		// if (e.cla.contains('bg-primary')) return;
+
+		// 		btn.classList.add('bg-primary');
+		// 		btn.classList.remove('bg-secondary');
+		// 	});
+		// });
 
 		// TODO: save and move to next card
 	} else {
 		alert('please add at least 3 words');
 	}
 });
+
 /**
  * handle click edit icon
  */
-document
-	.getElementById('previous-container')
-	.querySelectorAll('button')
-	.forEach((btn) => {
-		btn.addEventListener('click', (e) => {
-			const cardNumber = Number(e.target.dataset.card);
-		});
-	});
+page3.querySelector('#previous-container').addEventListener('click', (e) => {
+	console.log('click');
+	console.log(e);
+	// do nothing if click on the same active one
+	if (e.target.classList.contains('bg-primary')) return;
+	// update the card UI
+	const currentActive = page3.querySelector('#previous-container').querySelector('button.bg-primary');
+	currentActive.classList.remove('bg-primary');
+	currentActive.classList.add('bg-secondary');
+
+	e.target.classList.add('bg-primary');
+	e.target.classList.remove('bg-secondary');
+
+	// TODO: populate the data
+	const questions = JSON.parse(localStorage.getItem('question') || '[]') || [];
+	populateEditData(questions, e.target.dataset.sid);
+});
