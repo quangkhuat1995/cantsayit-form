@@ -146,11 +146,11 @@ suggestionsDiv.addEventListener('click', (e) => {
 // selectWordBox.classList.add('word-selected');
 
 /**
- * handle click end
+ * handle click add
  */
 
-const btnEnd = document.getElementById('btnEnd');
-btnEnd.addEventListener('click', (e) => {
+const btnAdd = document.getElementById('btnAdd');
+btnAdd.addEventListener('click', (e) => {
 	const inputs = document.querySelectorAll('#main input');
 	let isValid = true;
 	isValid &= validationService.checkAmountOfInput(inputs);
@@ -161,3 +161,15 @@ btnEnd.addEventListener('click', (e) => {
 		alert('please add at least 3 words');
 	}
 });
+
+/**
+ * handle click edit icon
+ */
+document
+	.getElementById('previous-container')
+	.querySelectorAll('button')
+	.forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			const cardNumber = Number(e.target.dataset.card);
+		});
+	});

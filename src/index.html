@@ -77,7 +77,7 @@
 							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hit</div>
 							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">hit</div>
 							<div class="bg-word text-gray-600 leading-7 h-7 w-max px-2">jump</div> -->
-							<div class="load-wrapp">
+							<!-- <div class="load-wrapp">
 								<div class="load-5">
 									<div class="ring-2">
 										<div class="ball-holder">
@@ -85,7 +85,7 @@
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 						</div>
 						<div id="main" class="p-4 bg-secondary rounded-3xl">
 							<div class="bg-transparent flex flex-col justify-between h-96">
@@ -117,9 +117,35 @@
 								</div>
 							</div>
 						</div>
-						<div id="action" class="w-full h-16 flex items-center justify-between px-3 text-white bg-white shadow-top">
-							<button class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">1</button>
-							<button id="btnEnd" class="w-11 h-8 bg-secondary text-xl shadow-round">End</button>
+						<div id="action" class="w-full h-16 flex items-center justify-between px-3 text-white bg-white shadow-top space-x-1 relative">
+							<div id="previous-container" class="flex space-x-1 overflow-x-auto" style="min-width: calc(100% - 44px - 0.75rem);">
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-primary text-center text-xl shadow-round">1</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">2</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">3</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">4</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">5</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">6</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">7</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">8</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">9</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">10</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">11</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">12</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">13</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">14</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">15</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">16</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">17</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">18</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">19</button>
+								<button style="min-width: 2rem;" class="w-8 h-8 rounded-full bg-secondary text-center text-xl shadow-round">20</button>
+							</div>
+							<div>
+								<button id="btnEnd" class="w-11 h-8 bg-secondary text-xl shadow-round">End</button>
+							</div>
+							<button id="btnAdd" class="absolute top-0 right-0 w-10 h-10 rounded-full focus:outline-none  transform -translate-y-full" title="Add card">
+								<img src="./assets/plus_btn.svg" alt="add card">
+							</button>
 						</div>
 					</section>
 				</div>
