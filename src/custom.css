@@ -14,7 +14,7 @@
 	display: none;
 }
 
-.word-selected {
+.word-selected[data-show='false'] {
 	visibility: hidden;
 	pointer-events: none;
 	user-select: none;

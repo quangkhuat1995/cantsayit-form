@@ -5,7 +5,7 @@ export const populateSuggestionWords = (suggestionWords = []) => {
 	let body = '';
 	suggestionWords.map((word, idx) => {
 		body += `
-			<div data-id="suggestWord-${idx + 1}-${word}" class="bg-word text-gray-600 leading-7 h-7 w-max px-2 relative">
+			<div data-id="suggestWord-${idx + 1}-${word}" data-show="true" class="bg-word text-gray-600 leading-7 h-7 w-max px-2 relative word-selected">
 				<span>${word}</span>
 				<span class="absolute top-0 right-0 border-black border rounded-full w-4 h-4 bg-word flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 text-center">+</span>
 			</div>
@@ -29,10 +29,4 @@ export const showLoadingSuggestions = () => {
 	if (suggestionsDiv) {
 		suggestionsDiv.innerHTML = loadingContent;
 	}
-};
-
-export const selectWord = (idx, word) => {
-	const suggestionsDiv = document.getElementById('suggestions');
-	const selectWordBox = suggestionsDiv.querySelector(`div[data-id='suggestWord-${idx}']`);
-	selectWordBox.classList.add('word-selected');
 };

@@ -117,16 +117,32 @@ page3.querySelector('form#search').addEventListener('submit', async (e) => {
 console.log('exx');
 
 /**
- * onClick select suggest words
+ * handle event click on each suggestion
  */
 const suggestionsDiv = document.getElementById('suggestions');
-console.log(suggestionsDiv.childNodes);
+suggestionsDiv.addEventListener('click', (e) => {
+	console.log('click');
+	const suggestBox = e.target.closest('div.relative.word-selected');
+	const inputs = document.querySelectorAll('#main input');
+	const haEmptyInputAtIndex = Array.from(inputs).findIndex(inp => !inp.value);
+	console.log(suggestBox);
+	if (suggestBox && haEmptyInputAtIndex !== -1) {
+		if (suggestBox.dataset.show === 'true') {
+			suggestBox.dataset.show = 'false';
+			inputs[haEmptyInputAtIndex].value = suggestBox.dataset.id.split('-').pop();
+			inputs[haEmptyInputAtIndex].classList.remove('bg-error')
+			inputs[haEmptyInputAtIndex].classList.add('bg-word')
+		}
+	}
+});
+
+// console.log(suggestionsDiv.children);
+// Array.from(suggestionsDiv.children).forEach((div) => div.addEventListener('click', selectWord));
 // const selectWordBox = suggestionsDiv.querySelector(`div[data-id='suggestWord-${idx}']`);
 // selectWordBox.addEventListener('click', () => {});
 // selectWordBox.classList.add('word-selected');
 
-const selectWord = (idx, word) => {
-	const suggestionsDiv = document.getElementById('suggestions');
-	const selectWordBox = suggestionsDiv.querySelector(`div[data-id='suggestWord-${idx}']`);
-	selectWordBox.classList.add('word-selected');
-};
+/**
+ * handle click end
+ */
+
