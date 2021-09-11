@@ -1,9 +1,9 @@
 import unsplashService from './services/Unsplash.js';
 import dictionaryService from './services/Dictionary.js';
+import validationService from './services/Validation.js';
 import { getExcludedWords } from './module/index.js';
 import { clearSuggestionWords, populateSuggestionWords, showLoadingSuggestions } from './module/suggestions.js';
 import { clearImage, showLoadingImage, showImage } from './module/image.js';
-
 const ENTER_KEY_CODE = 13;
 //each page will be section
 const sectionTags = document.getElementsByTagName('section');
@@ -58,9 +58,12 @@ page2.querySelector('input#title').addEventListener('keyup', (e) => {
 });
 
 page3.querySelector('form#search').addEventListener('submit', async (e) => {
+	e.preventDefault();
+	// const hasSearchValue = validationService.checkEmptyInput('searchWord');
+	// if (!hasSearchValue) return;
+
 	const searchValue = document.getElementById('searchWord').value;
 	console.log(searchValue);
-	e.preventDefault();
 
 	showLoadingSuggestions();
 	showLoadingImage();
@@ -124,14 +127,14 @@ suggestionsDiv.addEventListener('click', (e) => {
 	console.log('click');
 	const suggestBox = e.target.closest('div.relative.word-selected');
 	const inputs = document.querySelectorAll('#main input');
-	const haEmptyInputAtIndex = Array.from(inputs).findIndex(inp => !inp.value);
+	const haEmptyInputAtIndex = Array.from(inputs).findIndex((inp) => !inp.value.trim());
 	console.log(suggestBox);
 	if (suggestBox && haEmptyInputAtIndex !== -1) {
 		if (suggestBox.dataset.show === 'true') {
 			suggestBox.dataset.show = 'false';
 			inputs[haEmptyInputAtIndex].value = suggestBox.dataset.id.split('-').pop();
-			inputs[haEmptyInputAtIndex].classList.remove('bg-error')
-			inputs[haEmptyInputAtIndex].classList.add('bg-word')
+			inputs[haEmptyInputAtIndex].classList.remove('bg-error');
+			inputs[haEmptyInputAtIndex].classList.add('bg-word');
 		}
 	}
 });
@@ -146,3 +149,15 @@ suggestionsDiv.addEventListener('click', (e) => {
  * handle click end
  */
 
+const btnEnd = document.getElementById('btnEnd');
+btnEnd.addEventListener('click', (e) => {
+	const inputs = document.querySelectorAll('#main input');
+	let isValid = true;
+	isValid &= validationService.checkAmountOfInput(inputs);
+	if (isValid) {
+		console.log('valid');
+		// TODO: save and move to next card
+	} else {
+		alert('please add at least 3 words');
+	}
+});
