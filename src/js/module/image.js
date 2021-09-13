@@ -25,6 +25,9 @@ export const showImage = (unsplashResult) => {
 	mainImageTag.setAttribute('src', `${unsplashResult.rawUrl}&w=768&dpr=2`);
 	mainImageTag.setAttribute('alt', unsplashResult.description);
 	mainImageTag.classList.remove('hide');
-	mainImageTag.previousSibling.remove();
+	// mainImageTag.previousSibling.remove();
+	if (mainImageTag.previousSibling) {
+		mainImageTag.previousSibling.remove();
+	}
 	// mainImageTag.parentNode.removeChild(mainImageTag.previousSibling);
 };

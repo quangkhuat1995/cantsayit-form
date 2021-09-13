@@ -1,5 +1,6 @@
 import { clearSuggestionWords, populateSuggestionWords } from './suggestions.js';
 import { clearImage, showImage } from './image.js';
+import { clearInputs, populateInputs } from './inputs.js';
 
 export const getExcludedWords = () => {
 	return fetch('../../const/excludedWords.txt')
@@ -24,8 +25,7 @@ export const readyForNextCard = () => {
 	document.getElementById('searchWord').value = '';
 	clearSuggestionWords();
 	clearImage();
-	const inputs = document.querySelectorAll('#main input');
-	inputs.forEach((inp) => (inp.value = ''));
+	clearInputs();
 };
 
 export const populateEditData = (data, sid) => {
@@ -34,9 +34,27 @@ export const populateEditData = (data, sid) => {
 		document.getElementById('searchWord').value = editData.word;
 		populateSuggestionWords(editData.remainWords);
 		showImage(editData.image);
-		const inputs = document.querySelectorAll('#main input');
-		inputs.forEach((inp, idx) => (inp.value = editData.prohibited_words?.[idx] || ''));
+		populateInputs(editData.prohibited_words);
 	} else {
 		readyForNextCard();
 	}
+};
+
+export const modifyQuestions = (questions = []) => {
+	return questions.map((item) => {
+		const { image, remainWords, ...rest } = item;
+		return {
+			...rest,
+			image: image.rawUrl,
+		};
+	});
+};
+
+export const resetAll = () => {
+	swal({
+		title: `Thank you`,
+		text: 'You have successful uploaded',
+		icon: 'success',
+		buttons: 'Do another',
+	});
 };

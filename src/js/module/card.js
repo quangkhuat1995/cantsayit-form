@@ -20,3 +20,25 @@ export const addNewCard = (uuid, num) => {
 		newCard.previousElementSibling.classList.add('bg-secondary');
 	}
 };
+
+export const activeLastCard = (buttonElements) => {
+	const lastBtn = buttonElements[buttonElements.length - 1];
+
+	buttonElements.forEach((btn) => {
+		btn.classList.remove('bg-primary');
+		btn.classList.add('bg-secondary');
+	});
+	lastBtn.classList.add('bg-primary');
+	lastBtn.classList.remove('bg-secondary');
+};
+
+export const toggleActiveSelectedCard = (selectedButtonElement) => {
+	// de-active previous card
+	const currentActive = page3.querySelector('#previous-container').querySelector('button.bg-primary');
+	currentActive.classList.remove('bg-primary');
+	currentActive.classList.add('bg-secondary');
+
+	// active the clicked one
+	selectedButtonElement.classList.add('bg-primary');
+	selectedButtonElement.classList.remove('bg-secondary');
+};

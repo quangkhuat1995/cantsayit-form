@@ -1,5 +1,6 @@
 class Validation {
 	MIN_REQUIRE_INPUT = 3;
+	MIN_NUMBER_CARD = 3;
 
 	checkEmptyInput(inputElement) {
 		if (typeof inputElement === 'string') {
@@ -25,6 +26,19 @@ class Validation {
 			listInputElement[i].classList.remove('bg-word');
 		}
 		return false;
+	}
+
+	checkAllowToEnd(questions = []) {
+		if (questions.length < this.MIN_NUMBER_CARD) {
+			swal({
+				title: `You have just ${questions.length} card(s)`,
+				text: 'We strongly recommend a minimum of 20 cards.',
+				icon: 'warning',
+				buttons: 'Continue',
+			});
+			return false;
+		}
+		return true;
 	}
 }
 

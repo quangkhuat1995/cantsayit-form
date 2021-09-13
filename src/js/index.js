@@ -1,10 +1,12 @@
 import unsplashService from './services/Unsplash.js';
 import dictionaryService from './services/Dictionary.js';
 import validationService from './services/Validation.js';
-import { getExcludedWords, populateEditData, readyForNextCard } from './module/index.js';
+import uploadService from './services/Upload.js';
+import { getExcludedWords, modifyQuestions, populateEditData, readyForNextCard } from './module/index.js';
 import { clearSuggestionWords, populateSuggestionWords, showLoadingSuggestions } from './module/suggestions.js';
 import { clearImage, showLoadingImage, showImage } from './module/image.js';
-import { clearCards, addNewCard } from './module/card.js';
+import { clearCards, addNewCard, activeLastCard } from './module/card.js';
+import { clearInputs, populateSingleInput } from './module/inputs.js';
 
 const ENTER_KEY_CODE = 13;
 //each page will be section
@@ -62,16 +64,14 @@ page2.querySelector('input#title').addEventListener('keyup', (e) => {
 
 page3.querySelector('form#search').addEventListener('submit', async (e) => {
 	e.preventDefault();
-	// const hasSearchValue = validationService.checkEmptyInput('searchWord');
-	// if (!hasSearchValue) return;
 
 	const searchValue = document.getElementById('searchWord').value.trim();
 	if (!searchValue) return alert('please enter word');
 	localStorage.setItem('word', searchValue);
-	console.log(searchValue);
 
 	showLoadingSuggestions();
 	showLoadingImage();
+	clearInputs();
 
 	const [unsplashResult, dictionaryResult] = await Promise.allSettled([
 		unsplashService.searchPhotos(searchValue),
@@ -89,44 +89,29 @@ page3.querySelector('form#search').addEventListener('submit', async (e) => {
 		definition = definition.replace(/[^a-zA-Z0-9 ]/g, '');
 		let suggestWords = definition.split(' ');
 
-		console.log(suggestWords);
 		suggestWords = suggestWords.filter((el) => !excludedWords.includes(el));
-		console.log(suggestWords);
 		populateSuggestionWords(suggestWords);
 	} else {
 		//TODO: handle error not found word
 	}
-
-	console.log('unsplashResult', unsplashResult);
-	console.log('dictionaryResult', dictionaryResult);
 });
-console.log('exx');
 
 /**
  * handle event click on each suggestion
  */
 const suggestionsDiv = document.getElementById('suggestions');
 suggestionsDiv.addEventListener('click', (e) => {
-	console.log('click');
 	const suggestBox = e.target.closest('div.relative.word-selected');
 	const inputs = document.querySelectorAll('#main input');
-	const haEmptyInputAtIndex = Array.from(inputs).findIndex((inp) => !inp.value.trim());
-	console.log(suggestBox);
-	if (suggestBox && haEmptyInputAtIndex !== -1) {
+	const hasEmptyInputAtIndex = Array.from(inputs).findIndex((inp) => !inp.value.trim());
+	if (suggestBox && hasEmptyInputAtIndex !== -1) {
 		if (suggestBox.dataset.show === 'true') {
 			suggestBox.dataset.show = 'false';
-			inputs[haEmptyInputAtIndex].value = suggestBox.dataset.id.split('-').pop();
-			inputs[haEmptyInputAtIndex].classList.remove('bg-error');
-			inputs[haEmptyInputAtIndex].classList.add('bg-word');
+			const value = suggestBox.dataset.id.split('-').pop();
+			populateSingleInput(inputs[hasEmptyInputAtIndex], value);
 		}
 	}
 });
-
-// console.log(suggestionsDiv.children);
-// Array.from(suggestionsDiv.children).forEach((div) => div.addEventListener('click', selectWord));
-// const selectWordBox = suggestionsDiv.querySelector(`div[data-id='suggestWord-${idx}']`);
-// selectWordBox.addEventListener('click', () => {});
-// selectWordBox.classList.add('word-selected');
 
 /**
  * handle click add
@@ -138,10 +123,8 @@ btnAdd.addEventListener('click', (e) => {
 	let isValid = true;
 	isValid &= validationService.checkAmountOfInput(inputs);
 	if (isValid) {
-		console.log('valid');
 		const previousContainerDiv = document.getElementById('previous-container');
 		const buttons = previousContainerDiv.querySelectorAll('button');
-		const lastBtn = buttons[buttons.length - 1];
 
 		// select current active card
 		const cardBtn = previousContainerDiv.querySelector('button.bg-primary');
@@ -178,8 +161,6 @@ btnAdd.addEventListener('click', (e) => {
 			});
 			const newSID = uuidv4();
 			addNewCard(newSID, buttons.length + 1);
-			// reset the form
-			readyForNextCard();
 		} else {
 			questions = questions.map((item) => {
 				if (item.sid === currentSID) {
@@ -193,26 +174,13 @@ btnAdd.addEventListener('click', (e) => {
 				}
 				return item;
 			});
-			// TODO: move to add new one after edit
+			activeLastCard(buttons);
 		}
 
 		localStorage.setItem('question', JSON.stringify(questions));
-
-		console.log(page3.querySelector('#previous-container').querySelectorAll('button'));
-		// .forEach((btn) => {
-		// 	btn.addEventListener('click', (e) => {
-		// 		console.log('click');
-		// 		// do nothing if click on the same active one
-		// 		// if (e.cla.contains('bg-primary')) return;
-
-		// 		btn.classList.add('bg-primary');
-		// 		btn.classList.remove('bg-secondary');
-		// 	});
-		// });
-
-		// TODO: save and move to next card
+		readyForNextCard();
 	} else {
-		alert('please add at least 3 words');
+		return alert('please add at least 3 words');
 	}
 });
 
@@ -220,19 +188,51 @@ btnAdd.addEventListener('click', (e) => {
  * handle click edit icon
  */
 page3.querySelector('#previous-container').addEventListener('click', (e) => {
-	console.log('click');
-	console.log(e);
+	if (!e.target.dataset.sid) return;
 	// do nothing if click on the same active one
 	if (e.target.classList.contains('bg-primary')) return;
 	// update the card UI
-	const currentActive = page3.querySelector('#previous-container').querySelector('button.bg-primary');
-	currentActive.classList.remove('bg-primary');
-	currentActive.classList.add('bg-secondary');
+	toggleActiveSelectedCard(e.target);
 
-	e.target.classList.add('bg-primary');
-	e.target.classList.remove('bg-secondary');
-
-	// TODO: populate the data
 	const questions = JSON.parse(localStorage.getItem('question') || '[]') || [];
 	populateEditData(questions, e.target.dataset.sid);
+});
+
+const btnEnd = document.getElementById('btnEnd');
+btnEnd.addEventListener('click', () => {
+	const questions = JSON.parse(localStorage.getItem('question') || '[]') || [];
+	const canEnd = validationService.checkAllowToEnd(questions);
+	if (canEnd) {
+		const title = localStorage.getItem('title') || '';
+		const data = {
+			sid: uuidv4(),
+			title,
+			slug: String(title).trim()?.replace(/\s/g, '-') || '',
+			cover: 'empty',
+			author_id: 'system',
+			questions: modifyQuestions(questions),
+		};
+		uploadService
+			.save(data)
+			.then((res) => {
+				console.log('done');
+				localStorage.clear();
+
+				swal({
+					title: `Thank you`,
+					text: 'You have successful uploaded',
+					icon: 'success',
+					buttons: ['Cancel', 'Do another'],
+				}).then((ok) => {
+					if (ok) {
+						renderPage1();
+					} else {
+						// do nothing
+					}
+				});
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
 });
