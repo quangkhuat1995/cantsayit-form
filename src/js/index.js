@@ -75,6 +75,10 @@ page3.querySelector('form#search').addEventListener('submit', async (e) => {
 
 	const searchValue = document.getElementById('searchWord').value.trim();
 	if (!searchValue) return alert('please enter word');
+	console.log(validationService.checkDuplicate(searchValue));
+	if (validationService.checkDuplicate(searchValue)) {
+		return swal('Oops!', `"${searchValue}" has already been added to the deck`, 'warning');
+	}
 	localStorage.setItem('word', searchValue);
 
 	showLoadingSuggestions();
@@ -131,7 +135,10 @@ suggestionsDiv.addEventListener('click', (e) => {
 const btnAdd = document.getElementById('btnAdd');
 btnAdd.addEventListener('click', async (e) => {
 	const inputs = document.querySelectorAll('#main input[type="text"]');
-	const inputWord = page3.querySelector('form#search');
+	const inputWord = page3.querySelector('form#search #searchWord');
+
+	console.log(typeof inputWord);
+	console.log(inputWord);
 
 	let isValid = true;
 	isValid &= validationService.checkAmountOfInput(inputs);
@@ -309,4 +316,9 @@ document.querySelector('input#uploadImage').addEventListener('change', (e) => {
 			mainImageTag.setAttribute('alt', `${files[0].name}`);
 		};
 	}
+});
+
+window.addEventListener('beforeunload', () => {
+	localStorage.clear();
+	sessionStorage.clear();
 });

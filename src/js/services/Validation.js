@@ -58,6 +58,12 @@ class Validation {
 		}
 		return true;
 	}
+
+	checkDuplicate(word = '') {
+		const questions = JSON.parse(localStorage.getItem('question'));
+		if (!questions?.length) return false;
+		return questions.some((item) => item.word === word);
+	}
 }
 
 export default new Validation();
