@@ -20,6 +20,11 @@ export const showLoadingImage = () => {
 	mainImage.parentNode.insertBefore(wrapperLoading, mainImage);
 };
 
+export const clearLoadingImage = () => {
+	const mainImage = document.getElementById('mainImage');
+	mainImage.previousSibling?.remove();
+};
+
 export const showImage = (unsplashResult) => {
 	const mainImageTag = document.getElementById('mainImage');
 	mainImageTag.setAttribute('src', `${unsplashResult.rawUrl}&w=768&dpr=2`);

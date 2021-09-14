@@ -49,12 +49,3 @@ export const modifyQuestions = (questions = []) => {
 		};
 	});
 };
-
-export const resetAll = () => {
-	swal({
-		title: `Thank you`,
-		text: 'You have successful uploaded',
-		icon: 'success',
-		buttons: 'Do another',
-	});
-};

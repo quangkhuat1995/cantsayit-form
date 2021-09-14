@@ -16,11 +16,11 @@ class Unsplash {
 			if (!results?.length) {
 				throw new Error('No images found');
 			}
-			const rawUrl = results[0].urls.raw;
-			const description = results[0].description;
-			return { rawUrl, description };
+			const data = results.map((item) => ({ rawUrl: item.urls.raw, description: item.description }));
+			sessionStorage.setItem('UNSPLASH', JSON.stringify(data));
+			return data;
 		} catch (error) {
-			console.log(error);
+			throw new Error('image not found');
 		}
 	};
 }

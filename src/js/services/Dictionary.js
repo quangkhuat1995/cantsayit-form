@@ -16,9 +16,9 @@ class Dictionary {
 			//		resolution: "You can try the search again at later time or head to the web instead."
 			//		title: "No Definitions Found"
 			//	}
-			return { definition: 'Not found' };
+			throw new Error("Sorry we can't find any suggestions");
 		} catch (error) {
-			console.log(error);
+			throw new Error('Not found');
 		}
 	};
 }

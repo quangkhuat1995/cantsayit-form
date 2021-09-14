@@ -4,7 +4,7 @@ import validationService from './services/Validation.js';
 import uploadService from './services/Upload.js';
 import { getExcludedWords, modifyQuestions, populateEditData, readyForNextCard } from './module/index.js';
 import { clearSuggestionWords, populateSuggestionWords, showLoadingSuggestions } from './module/suggestions.js';
-import { clearImage, showLoadingImage, showImage } from './module/image.js';
+import { clearImage, showLoadingImage, showImage, clearLoadingImage } from './module/image.js';
 import { clearCards, addNewCard, activeLastCard } from './module/card.js';
 import { clearInputs, populateSingleInput } from './module/inputs.js';
 
@@ -14,6 +14,7 @@ const sectionTags = document.getElementsByTagName('section');
 const [page1, page2, page3, ...rest] = sectionTags;
 
 let excludedWords = [];
+let photoIndex = 0;
 // only add .show for section doesn't use display block
 const togglePage = (page) => {
 	if (!page.classList.contains('flex')) {
@@ -26,6 +27,7 @@ const renderPage1 = (e) => {
 	togglePage(page1);
 	page2.classList.add('hide');
 	page3.classList.add('hide');
+	photoIndex = 0;
 };
 
 const renderPage2 = () => {
@@ -42,6 +44,7 @@ const renderPage3 = () => {
 	clearSuggestionWords();
 	clearImage();
 	clearCards(uuidv4());
+	sessionStorage.clear();
 };
 
 // render page1 onLoaded complete
@@ -79,9 +82,10 @@ page3.querySelector('form#search').addEventListener('submit', async (e) => {
 	]);
 
 	if (unsplashResult.status === 'fulfilled') {
-		showImage(unsplashResult.value);
+		showImage(unsplashResult.value[0]);
 	} else {
-		//TODO: handle error not found image
+		clearLoadingImage();
+		sessionStorage.clear();
 	}
 
 	if (dictionaryResult.status === 'fulfilled') {
@@ -92,7 +96,9 @@ page3.querySelector('form#search').addEventListener('submit', async (e) => {
 		suggestWords = suggestWords.filter((el) => !excludedWords.includes(el));
 		populateSuggestionWords(suggestWords);
 	} else {
-		//TODO: handle error not found word
+		clearSuggestionWords();
+		sessionStorage.clear();
+		swal("We can't find any suggestion words");
 	}
 });
 
@@ -217,6 +223,7 @@ btnEnd.addEventListener('click', () => {
 			.then((res) => {
 				console.log('done');
 				localStorage.clear();
+				sessionStorage.clear();
 
 				swal({
 					title: `Thank you`,
@@ -234,5 +241,26 @@ btnEnd.addEventListener('click', () => {
 			.catch((err) => {
 				console.log(err);
 			});
+	}
+});
+
+/**
+ * handle go next or back of an image
+ */
+
+document.getElementById('btn_image').addEventListener('click', (e) => {
+	const unsplashData = JSON.parse(sessionStorage.getItem('UNSPLASH'));
+	if (!unsplashData) return;
+
+	if (e.target.id === 'btn_back' && photoIndex > 0) {
+		photoIndex -= 1;
+		showImage(unsplashData[photoIndex]);
+	} else if (e.target.id === 'btn_next' && photoIndex < unsplashData.length - 1) {
+		photoIndex += 1;
+		showImage(unsplashData[photoIndex]);
+	}
+
+	if (photoIndex === 0 || photoIndex === unsplashData.length - 1) {
+		swal('No more photo');
 	}
 });
