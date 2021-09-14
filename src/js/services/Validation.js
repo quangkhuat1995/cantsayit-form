@@ -40,6 +40,24 @@ class Validation {
 		}
 		return true;
 	}
+
+	checkFileType(file) {
+		const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+		if (!validImageTypes.includes(file.type)) {
+			swal('Please upload image only');
+			return false;
+		}
+
+		return true;
+	}
+
+	isHttpURL(url = '') {
+		// /^data:image\/(?:gif|png|jpeg|bmp|webp)(?:;charset=utf-8)?;base64,(?:[A-Za-z0-9]|[+/])+={0,2}/g
+		if (url.includes('data:image')) {
+			return false;
+		}
+		return true;
+	}
 }
 
 export default new Validation();

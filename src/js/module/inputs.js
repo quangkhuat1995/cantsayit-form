@@ -7,7 +7,7 @@ export const populateSingleInput = (inputElement, value) => {
 };
 
 export const populateInputs = (values = []) => {
-	const inputs = document.querySelectorAll('#main input');
+	const inputs = document.querySelectorAll('#main input[type="text"]');
 	inputs.forEach((inp, index) => (inp.value = values[index] || ''));
 };
 

@@ -34,7 +34,7 @@ export const activeLastCard = (buttonElements) => {
 
 export const toggleActiveSelectedCard = (selectedButtonElement) => {
 	// de-active previous card
-	const currentActive = page3.querySelector('#previous-container').querySelector('button.bg-primary');
+	const currentActive = document.querySelector('#previous-container').querySelector('button.bg-primary');
 	currentActive.classList.remove('bg-primary');
 	currentActive.classList.add('bg-secondary');
 

@@ -5,7 +5,7 @@ import uploadService from './services/Upload.js';
 import { getExcludedWords, modifyQuestions, populateEditData, readyForNextCard } from './module/index.js';
 import { clearSuggestionWords, populateSuggestionWords, showLoadingSuggestions } from './module/suggestions.js';
 import { clearImage, showLoadingImage, showImage, clearLoadingImage } from './module/image.js';
-import { clearCards, addNewCard, activeLastCard } from './module/card.js';
+import { clearCards, addNewCard, activeLastCard, toggleActiveSelectedCard } from './module/card.js';
 import { clearInputs, populateSingleInput } from './module/inputs.js';
 
 const ENTER_KEY_CODE = 13;
@@ -15,6 +15,7 @@ const [page1, page2, page3, ...rest] = sectionTags;
 
 let excludedWords = [];
 let photoIndex = 0;
+let file = null;
 // only add .show for section doesn't use display block
 const togglePage = (page) => {
 	if (!page.classList.contains('flex')) {
@@ -28,6 +29,7 @@ const renderPage1 = (e) => {
 	page2.classList.add('hide');
 	page3.classList.add('hide');
 	photoIndex = 0;
+	file = null;
 };
 
 const renderPage2 = () => {
@@ -55,12 +57,15 @@ page1.querySelector('button').addEventListener('click', renderPage2);
 
 // form page 2 move to page 3
 page2.querySelector('input#title').addEventListener('keyup', (e) => {
+	e.target.classList.remove('bg-error');
 	if (e.keyCode === ENTER_KEY_CODE || e.key === 'Enter') {
+		if (!validationService.checkEmptyInput(e.target)) {
+			return swal('Oops', "You can't let the title blank!!", 'warning');
+		}
 		renderPage3();
 		localStorage.setItem('title', e.target.value);
 		getExcludedWords().then((text) => {
 			excludedWords = text?.split('\n') || [];
-			console.log(excludedWords);
 		});
 	}
 });
@@ -108,7 +113,7 @@ page3.querySelector('form#search').addEventListener('submit', async (e) => {
 const suggestionsDiv = document.getElementById('suggestions');
 suggestionsDiv.addEventListener('click', (e) => {
 	const suggestBox = e.target.closest('div.relative.word-selected');
-	const inputs = document.querySelectorAll('#main input');
+	const inputs = document.querySelectorAll('#main input[type="text"]');
 	const hasEmptyInputAtIndex = Array.from(inputs).findIndex((inp) => !inp.value.trim());
 	if (suggestBox && hasEmptyInputAtIndex !== -1) {
 		if (suggestBox.dataset.show === 'true') {
@@ -124,10 +129,13 @@ suggestionsDiv.addEventListener('click', (e) => {
  */
 
 const btnAdd = document.getElementById('btnAdd');
-btnAdd.addEventListener('click', (e) => {
-	const inputs = document.querySelectorAll('#main input');
+btnAdd.addEventListener('click', async (e) => {
+	const inputs = document.querySelectorAll('#main input[type="text"]');
+	const inputWord = page3.querySelector('form#search');
+
 	let isValid = true;
 	isValid &= validationService.checkAmountOfInput(inputs);
+	isValid &= validationService.checkEmptyInput(inputWord);
 	if (isValid) {
 		const previousContainerDiv = document.getElementById('previous-container');
 		const buttons = previousContainerDiv.querySelectorAll('button');
@@ -146,14 +154,25 @@ btnAdd.addEventListener('click', (e) => {
 			(acc, inp) => (inp.value.trim() ? [...acc, inp.value.trim()] : acc),
 			[]
 		);
-		const imageURL = document.getElementById('mainImage').getAttribute('src');
-		const imageAlt = document.getElementById('mainImage').getAttribute('alt');
+		let imageURL = document.getElementById('mainImage').getAttribute('src');
+		let imageAlt = document.getElementById('mainImage').getAttribute('alt');
 		const remainWordBoxes = document
 			.getElementById('suggestions')
 			.querySelectorAll('div.relative.word-selected[data-show="true"]');
 		let remainWords = [];
 		if (remainWordBoxes) {
 			remainWords = Array.from(remainWordBoxes).map((item) => item.dataset.id.split('-').pop());
+		}
+
+		// check type of image, is it a custom upload or https image, need to upload if http
+		if (!validationService.isHttpURL(imageURL)) {
+			const result = await unsplashService.uploadPhoto(file);
+			if (result.status) {
+				imageURL = result.rawUrl;
+				imageAlt = result.description;
+			} else {
+				swal('Sorry', "We couldn't upload the photo at the moment", 'error');
+			}
 		}
 
 		if (isAdd) {
@@ -262,5 +281,32 @@ document.getElementById('btn_image').addEventListener('click', (e) => {
 
 	if (photoIndex === 0 || photoIndex === unsplashData.length - 1) {
 		swal('No more photo');
+	}
+});
+
+/**
+ * onClick upload button
+ */
+document.getElementById('btn_upload').addEventListener('click', () => {
+	document.querySelector('input#uploadImage').click();
+});
+document.querySelector('input#uploadImage').addEventListener('change', (e) => {
+	const files = e.target.files;
+	if (!files) return;
+	const isValid = validationService.checkFileType(files[0]);
+
+	if (isValid) {
+		const fileReader = new FileReader();
+		fileReader.readAsDataURL(files[0]);
+
+		file = files[0];
+
+		fileReader.onload = function () {
+			const url = fileReader.result;
+			const mainImageTag = document.getElementById('mainImage');
+			mainImageTag.classList.remove('hide');
+			mainImageTag.setAttribute('src', `${url}`);
+			mainImageTag.setAttribute('alt', `${files[0].name}`);
+		};
 	}
 });
