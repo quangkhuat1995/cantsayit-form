@@ -1,4 +1,4 @@
-import { UNSPLASH_BASE_URL, UNSPLASH_ACCESS_KEY } from '../config/index.js';
+import { UNSPLASH_BASE_URL, UNSPLASH_ACCESS_KEY, IMGBB_API_KEY } from '../config/index.js';
 class Unsplash {
 	// https://unsplash.com/documentation#example-image-use
 	searchPhotos = async (key = '') => {
@@ -24,6 +24,7 @@ class Unsplash {
 		}
 	};
 
+	// unusable in localhost
 	uploadPhotoImgur = async (file) => {
 		try {
 			const formData = new FormData();
@@ -41,11 +42,10 @@ class Unsplash {
 	};
 
 	uploadPhoto = async (file) => {
-		const key = '63e740333ad88f1ade6f4494a4d2b545';
 		try {
 			const formData = new FormData();
 			formData.append('image', file);
-			const response = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
+			const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
 				method: 'POST',
 				body: formData,
 			});

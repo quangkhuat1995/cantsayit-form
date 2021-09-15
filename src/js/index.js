@@ -75,7 +75,7 @@ page3.querySelector('form#search').addEventListener('submit', async (e) => {
 
 	const searchValue = document.getElementById('searchWord').value.trim();
 	if (!searchValue) return alert('please enter word');
-	console.log(validationService.checkDuplicate(searchValue));
+
 	if (validationService.checkDuplicate(searchValue)) {
 		return swal('Oops!', `"${searchValue}" has already been added to the deck`, 'warning');
 	}
@@ -136,9 +136,6 @@ const btnAdd = document.getElementById('btnAdd');
 btnAdd.addEventListener('click', async (e) => {
 	const inputs = document.querySelectorAll('#main input[type="text"]');
 	const inputWord = page3.querySelector('form#search #searchWord');
-
-	console.log(typeof inputWord);
-	console.log(inputWord);
 
 	let isValid = true;
 	isValid &= validationService.checkAmountOfInput(inputs);
@@ -277,17 +274,21 @@ btnEnd.addEventListener('click', () => {
 document.getElementById('btn_image').addEventListener('click', (e) => {
 	const unsplashData = JSON.parse(sessionStorage.getItem('UNSPLASH'));
 	if (!unsplashData) return;
-
+	const inputUpload = document.getElementById('uploadImage');
 	if (e.target.id === 'btn_back' && photoIndex > 0) {
 		photoIndex -= 1;
 		showImage(unsplashData[photoIndex]);
+		if (file) {
+			file = null;
+			inputUpload.value = '';
+		}
 	} else if (e.target.id === 'btn_next' && photoIndex < unsplashData.length - 1) {
 		photoIndex += 1;
 		showImage(unsplashData[photoIndex]);
-	}
-
-	if (photoIndex === 0 || photoIndex === unsplashData.length - 1) {
-		swal('No more photo');
+		if (file) {
+			file = null;
+			inputUpload.value = '';
+		}
 	}
 });
 

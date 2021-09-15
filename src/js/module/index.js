@@ -3,7 +3,7 @@ import { clearImage, showImage } from './image.js';
 import { clearInputs, populateInputs } from './inputs.js';
 
 export const getExcludedWords = () => {
-	return fetch('../../const/excludedWords.txt')
+	return fetch('const/excludedWords.txt')
 		.then((response) => response.text())
 		.then((text) => text)
 		.catch((err) => console.log(err));
